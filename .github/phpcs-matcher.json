@@ -1,0 +1,19 @@
+{
+  "problemMatcher": [
+    {
+      "owner": "phpcs",
+      "severity": "error",
+      "pattern": [
+        {
+          "regexp": "^Severity=\\((.+)\\) File=\\((.+)\\) Line=\\((.+)\\) Column=\\((.+)\\) Message=\\((.+)\\) Code=\\((.+)\\)$",
+          "file": 2,
+          "line": 3,
+          "column": 4,
+          "severity": 1,
+          "message": 5,
+          "code": 6
+        }
+      ]
+    }
+  ]
+}
