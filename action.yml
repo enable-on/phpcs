@@ -52,6 +52,7 @@ runs:
               echo '-------Sniffer raw output finish--------'
               SNIFFER_FILTERED=$(php tests/code_sniffer/start.php report.csv git_changed_files_and_lines.txt /home/runner/work/pdffiller/pdffiller/)
               echo '-------Sniffer filtered output start--------'
+              echo "::add-matcher::phpcs-matcher.json"
               echo "$SNIFFER_FILTERED"
               echo '-------Sniffer filtered output finish--------'
               echo "$SNIFFER_FILTERED" > sniffer_output.txt
