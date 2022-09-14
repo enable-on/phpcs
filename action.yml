@@ -38,6 +38,7 @@ runs:
               vendor/squizlabs/php_codesniffer/bin/phpcs --config-set ignore_errors_on_exit 1
               vendor/squizlabs/php_codesniffer/bin/phpcs --config-set ignore_warnings_on_exit 1
               SNIFFER_OUTPUT=$(vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 --report=csv "$GIT_MODIFIED_FILES_LIST")
+              echo 'Sniffer output by changed files'
               echo "$SNIFFER_OUTPUT"
               echo "$SNIFFER_OUTPUT" > report.csv
               cat git_changed_files_and_lines.txt
