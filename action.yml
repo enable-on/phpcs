@@ -12,10 +12,14 @@ runs:
           with:
               fetch-depth: 0
         - run: GIT_MODIFIED_FILES_LIST=$(git diff --name-only --diff-filter=AM `git merge-base origin/master HEAD` | grep .php$ | xargs)
+          env:
+              GITHUB_TOKEN: ${{ inputs.token }}
           shell: bash
         - run: |
               GIT_CHANGED_FILES_AND_LINES=$(git diff --unified=0 --diff-filter=AM `git merge-base origin/master HEAD` | grep -Po '^\+\+\+ ./\K.*|^@@ -[0-9]+(,[0-9]+)? \+\K[0-9]+(,[0-9]+)?(?= @@)')
               echo "$GIT_CHANGED_FILES_AND_LINES" > git_changed_files_and_lines.txt
+          env:
+              GITHUB_TOKEN: ${{ inputs.token }}
           shell: bash
         - uses: shivammathur/setup-php@v2
           with:
