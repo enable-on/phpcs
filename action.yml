@@ -35,6 +35,8 @@ runs:
               composer install --no-interaction --no-ansi --prefer-dist --no-suggest --ignore-platform-reqs
           shell: bash
         - run: |
+              echo 'Git modified or added PHP files'
+              echo "$GIT_MODIFIED_FILES_LIST"
               vendor/squizlabs/php_codesniffer/bin/phpcs --config-set ignore_errors_on_exit 1
               vendor/squizlabs/php_codesniffer/bin/phpcs --config-set ignore_warnings_on_exit 1
               SNIFFER_OUTPUT=$(vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 --report=csv "$GIT_MODIFIED_FILES_LIST")
