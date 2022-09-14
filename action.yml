@@ -1,5 +1,10 @@
 name: 'phpcs-ci-action'
 description: 'PHP code sniffing action to use on PR and pushes'
+inputs:
+    token:  # id of input
+        description: 'Github token'
+        required: true
+        default: ''
 runs:
     using: "composite"
     steps:
@@ -19,7 +24,7 @@ runs:
         - run: composer validate
           shell: bash
         - run: |
-              composer config --global github-oauth.github.com ${{secrets.GA_GITHUB_TOKEN}}
+              composer config --global github-oauth.github.com ${{inputs.token}}
               composer install --no-interaction --no-ansi --prefer-dist --no-suggest --ignore-platform-reqs
           shell: bash
         - run: |
