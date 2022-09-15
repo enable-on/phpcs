@@ -45,7 +45,7 @@ runs:
         - run: |
               vendor/squizlabs/php_codesniffer/bin/phpcs --config-set ignore_errors_on_exit 1
               vendor/squizlabs/php_codesniffer/bin/phpcs --config-set ignore_warnings_on_exit 1
-              SNIFFER_OUTPUT=$(vendor/squizlabs/php_codesniffer/bin/phpcs --standard=PSR12 --report=csv ${{ steps.git.outputs.git_modified_files }})
+              SNIFFER_OUTPUT=$(vendor/squizlabs/php_codesniffer/bin/phpcs --standard=phpcs.xml --report=csv ${{ steps.git.outputs.git_modified_files }})
               echo '-------Sniffer raw output start--------'
               echo "$SNIFFER_OUTPUT"
               echo "$SNIFFER_OUTPUT" > report.csv
@@ -55,6 +55,5 @@ runs:
               echo "::add-matcher::.github/phpcs-matcher.json"
               echo "$SNIFFER_FILTERED"
               echo '-------Sniffer filtered output finish--------'
-              echo "$SNIFFER_FILTERED" > sniffer_output.txt
           if: ${{ steps.git.outputs.start_sniffer == 1 }}
           shell: bash
