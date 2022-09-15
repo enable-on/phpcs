@@ -20,6 +20,9 @@ inputs:
     filter-script:
         description: 'path to php script to filter sniffer raw output'
         required: true
+    problem-matcher:
+        description: 'path to problem matcher'
+        required: true
 runs:
     using: "composite"
     steps:
@@ -67,8 +70,10 @@ runs:
               echo '-------Sniffer raw output finish--------'
               SNIFFER_FILTERED=$(php ${{ inputs.filter-script }} report.csv git_changed_files_and_lines.txt ${{ inputs.exclude-path }})
               echo '-------Sniffer filtered output start--------'
-              echo "::add-matcher::.github/phpcs-matcher.json"
+              echo "::add-matcher::$PROBLEM_MATCHER"
               echo "$SNIFFER_FILTERED"
               echo '-------Sniffer filtered output finish--------'
           if: ${{ steps.git.outputs.start_sniffer == 1 }}
+          env:
+              PROBLEM_MATCHER: ${{ inputs.problem-matcher }}
           shell: bash
