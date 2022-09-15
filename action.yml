@@ -5,6 +5,21 @@ inputs:
         description: 'Github token'
         required: true
         default: ''
+    phpcs-path:
+        description: 'Path to PHP codesniffer executable'
+        required: true
+    phpcs-config:
+        description: 'Path to phpcs config ruleset'
+        required: true
+    php:
+        description: 'php version'
+        required: true
+    exclude-path:
+        description: 'path that should be trimmed from filepath in filtering'
+        required: true
+    filter-script:
+        description: 'path to php script to filter sniffer raw output'
+        required: true
 runs:
     using: "composite"
     steps:
@@ -34,7 +49,7 @@ runs:
           shell: bash
         - uses: shivammathur/setup-php@v2
           with:
-              php-version: '7.4'
+              php-version: ${{ inputs.php }}
               coverage: none
         - run: composer validate
           shell: bash
@@ -43,14 +58,14 @@ runs:
               composer install --no-interaction --no-ansi --prefer-dist --no-suggest --ignore-platform-reqs
           shell: bash
         - run: |
-              vendor/squizlabs/php_codesniffer/bin/phpcs --config-set ignore_errors_on_exit 1
-              vendor/squizlabs/php_codesniffer/bin/phpcs --config-set ignore_warnings_on_exit 1
-              SNIFFER_OUTPUT=$(vendor/squizlabs/php_codesniffer/bin/phpcs --standard=phpcs.xml --report=csv ${{ steps.git.outputs.git_modified_files }})
+              ${{ inputs.phpcs-path }} --config-set ignore_errors_on_exit 1
+              ${{ inputs.phpcs-path }} --config-set ignore_warnings_on_exit 1
+              SNIFFER_OUTPUT=$(${{ inputs.phpcs-path }} --standard=${{ inputs.phpcs-config }} --report=csv ${{ steps.git.outputs.git_modified_files }})
               echo '-------Sniffer raw output start--------'
               echo "$SNIFFER_OUTPUT"
               echo "$SNIFFER_OUTPUT" > report.csv
               echo '-------Sniffer raw output finish--------'
-              SNIFFER_FILTERED=$(php tests/code_sniffer/start.php report.csv git_changed_files_and_lines.txt /home/runner/work/pdffiller/pdffiller/)
+              SNIFFER_FILTERED=$(php ${{ inputs.filter-script }} report.csv git_changed_files_and_lines.txt ${{ inputs.exclude-path }})
               echo '-------Sniffer filtered output start--------'
               echo "::add-matcher::.github/phpcs-matcher.json"
               echo "$SNIFFER_FILTERED"
