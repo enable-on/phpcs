@@ -35,7 +35,7 @@ runs:
               echo '-------Git modified PHP files--------'
               echo "$GIT_MODIFIED_AND_ADDED_PHP_FILES"
               echo '-------Git modified PHP files--------'
-              echo "::set-output name=git_modified_files::$(echo "$GIT_MODIFIED_AND_ADDED_PHP_FILES")"
+              echo "::set-output name=git_modified_files::$(git diff --name-only --diff-filter=AM `git merge-base origin/master HEAD` | grep .php$ || true | xargs)"
               if [ -z "$GIT_MODIFIED_AND_ADDED_PHP_FILES" ]; then
                 echo ::set-output name=start_sniffer::0
               else
