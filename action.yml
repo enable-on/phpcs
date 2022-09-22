@@ -31,13 +31,10 @@ runs:
               fetch-depth: 0
         - run: |
               echo 'Git modified and added php files'
-              GIT_MODIFIED_AND_ADDED_PHP_FILES=$(git diff --name-only --diff-filter=AM `git merge-base origin/master HEAD` | grep .php$ || true | xargs)
+              GIT_MODIFIED_AND_ADDED_PHP_FILES=$((git diff --name-only --diff-filter=AM `git merge-base origin/master HEAD` | grep .php$ || true) | xargs)
               echo '-------Git modified PHP files--------'
               echo "$GIT_MODIFIED_AND_ADDED_PHP_FILES"
               echo '-------Git modified PHP files--------'
-              GIT_MODIFIED_AND_ADDED_PHP_FILES="${GIT_MODIFIED_AND_ADDED_PHP_FILES//'%'/'%25'}"
-              GIT_MODIFIED_AND_ADDED_PHP_FILES="${GIT_MODIFIED_AND_ADDED_PHP_FILES//$'\n'/'%0A'}"
-              GIT_MODIFIED_AND_ADDED_PHP_FILES="${GIT_MODIFIED_AND_ADDED_PHP_FILES//$'\r'/'%0D'}"
               echo "::set-output name=git_modified_files::$GIT_MODIFIED_AND_ADDED_PHP_FILES"
               if [ -z "$GIT_MODIFIED_AND_ADDED_PHP_FILES" ]; then
                 echo ::set-output name=start_sniffer::0
