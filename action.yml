@@ -23,6 +23,9 @@ inputs:
     problem-matcher:
         description: 'path to problem matcher'
         required: true
+    base-branch:
+        description: 'base branch to compare with'
+        required: true
 runs:
     using: "composite"
     steps:
@@ -31,7 +34,7 @@ runs:
               fetch-depth: 0
         - run: |
               echo 'Git modified and added php files'
-              GIT_MODIFIED_AND_ADDED_PHP_FILES=$((git diff --name-only --diff-filter=AM `git merge-base origin/master HEAD` | grep .php$ || true) | xargs)
+              GIT_MODIFIED_AND_ADDED_PHP_FILES=$((git diff --name-only --diff-filter=AM `git merge-base origin/${{ inputs.base-branch }} HEAD` | grep .php$ || true) | xargs)
               echo '-------Git modified PHP files--------'
               echo "$GIT_MODIFIED_AND_ADDED_PHP_FILES"
               echo '-------Git modified PHP files--------'
@@ -41,7 +44,7 @@ runs:
               else
                 echo ::set-output name=start_sniffer::1
               fi
-              GIT_CHANGED_FILES_AND_LINES=$(git diff --unified=0 --diff-filter=AM `git merge-base origin/master HEAD` | grep -Po '^\+\+\+ ./\K.*|^@@ -[0-9]+(,[0-9]+)? \+\K[0-9]+(,[0-9]+)?(?= @@)')
+              GIT_CHANGED_FILES_AND_LINES=$(git diff --unified=0 --diff-filter=AM `git merge-base origin/${{ inputs.base-branch }} HEAD` | grep -Po '^\+\+\+ ./\K.*|^@@ -[0-9]+(,[0-9]+)? \+\K[0-9]+(,[0-9]+)?(?= @@)')
               echo "$GIT_CHANGED_FILES_AND_LINES" > git_changed_files_and_lines.txt
               echo '-------Git modified files with lines--------'
               cat git_changed_files_and_lines.txt
