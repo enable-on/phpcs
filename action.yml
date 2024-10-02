@@ -5,6 +5,10 @@ inputs:
         description: 'Github token'
         required: true
         default: ''
+    artifactory-token:
+        description: 'Composer token to authenticate composer against artifactory'
+        required: true
+        default: ''
     phpcs-path:
         description: 'Path to PHP codesniffer executable'
         required: true
@@ -61,6 +65,7 @@ runs:
           shell: bash
         - run: |
               composer config --global github-oauth.github.com ${{inputs.token}}
+              composer config --global bearer.artifactory.infrateam.xyz:443 ${{inputs.artifactory-token}}
               composer install --no-interaction --no-ansi --prefer-dist --no-suggest --ignore-platform-reqs
           shell: bash
         - run: |
